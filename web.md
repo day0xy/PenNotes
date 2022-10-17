@@ -1,6 +1,105 @@
+### 绕过技巧
+
+
+
+https://blog.csdn.net/weixin_39190897/article/details/116247765
+
+这篇文章很不错
+
+
+
+
+
+##### 空格被过滤
+
+$IFS为linux中的空格
+
+```
+${IFS}$9
+{IFS}
+$IFS
+${IFS}
+$IFS$1 //$1改成$加其他数字貌似都行
+IFS
+< 
+<> 
+{cat,flag.php}  //用逗号实现了空格功能，需要用{}括起来
+%20   (space)
+%09   (tab)
+X=$'cat\x09./flag.php';$X       （\x09表示tab，也可以用\x20）
+
+```
+
+##### 内联绕过
+
+```
+cat$IFS$9`ls`
+ls结果是index.php flag.php
+
+反引号把输出内容作为输入
+结果就是index.php flag.php的内容了。
+```
+
+
+
+
+
+### 反序列化
+
+##### php反序列化
+
+###### 缩写对应类型
+
+```
+缩写对应类型
+a - array         b - boolean
+d - double         i - integer
+o - common object     r - reference
+s - string         C - custom object
+O - class         N - null
+R - pointer reference   U - unicode string
+```
+
+###### serialize()
+
+```
+序列化后 
+O:4:"User":2:{s:3:"age";i:20;s:4:"name";s:4:"daye";}
+对象类型：长度：“类名”：类中变量个数：{类型：长度：“变量名”;值类型:值;类型：长度：“变量名”;值类型：值}
+```
+
+###### unserialize()
+
+```
+反序列化
+```
+
+###### 魔法函数
+
+__双下划线开头被称为魔法函数
+
+```
+__construct  当一个对象创建时被调用，
+__destruct  当一个对象销毁时被调用，
+__toString  当一个对象被当作一个字符串被调用。
+__wakeup()  使用unserialize时触发
+__sleep()  使用serialize时触发
+__destruct()  对象被销毁时触发
+__call()  在对象上下文中调用不可访问的方法时触发
+__callStatic()  在静态上下文中调用不可访问的方法时触发
+__get()  用于从不可访问的属性读取数据
+__set()  用于将数据写入不可访问的属性
+__isset()  在不可访问的属性上调用isset()或empty()触发
+__unset()   在不可访问的属性上使用unset()时触发
+__toString()  把类当作字符串使用时触发,返回值需要为字符串
+__invoke()  当脚本尝试将对象调用为函数时触发
+```
+
+其他魔法函数 具体见https://www.php.net/manual/zh/language.oop5.magic.php
+
 ### 文件包含 
 
-
+##### 
 
 #### php伪协议
 
@@ -23,10 +122,6 @@ data://
 ##### php://filter
 
 需要开启allow_url_fopen,不需要开启allow_url_include
-
-
-
-
 
 ###### 转换过滤器
 
@@ -66,3 +161,8 @@ ASCII*}
 }
 ```
 
+
+
+
+
+### 文件上传
