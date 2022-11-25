@@ -1,5 +1,7 @@
 # Sql注入笔记
 
+## Mysql
+
 ### 注入检测
 
 | 测试字符串   | 变种           |
@@ -582,4 +584,8 @@ sqlmap -d "mysql://root:root@192.168.10.130:3306/mysql" --os-shell   #知道网�
 
 --keep-alive     保持连接，当出现 [CRITICAL] connection dropped or unknown HTTP status code received. sqlmap is going to retry the request(s) 保错的时候，使用这个参数
 ```
+
+
+
+## Nosql
 
